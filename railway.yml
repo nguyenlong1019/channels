@@ -1,0 +1,17 @@
+name: my-first_app
+env:
+  - CHANNEL_LAYERS= {
+      'default': {
+          'BACKEND': 'channels_redis.core.RedisChannelLayer',
+          'CONFIG': {
+              "hosts": [('127.0.0.1', 6379)],
+          },
+      },
+}
+build:
+  - pip install -r requirements.txt
+release:
+  - python manage.py migrate
+  - python manage.py collectstatic --noinput
+  - python manage.py runworker
+  - daphne your_project.asgi:application --port $PORT
